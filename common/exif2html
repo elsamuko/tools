@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DUMPFILE="/tmp/exiftool_dump.html"
+
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <image>"
+  exit 1
+fi
+
+exiftool-5.16 -htmldump "$1" > "$DUMPFILE"
+open "$DUMPFILE"

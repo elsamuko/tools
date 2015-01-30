@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ ! $# -eq 1 ]; then
+    echo "Usage: git_to_lower.sh <file>"
+    exit 1
+fi
+
+if [ ! -f $1 ]; then
+    echo "Could not find $1"
+    exit 1
+fi
+
+BEFORE="$1"
+TMPFILE="${BEFORE}.tmp"
+LOWER="$(echo $1 | awk '{print tolower($0)}')"
+
+echo "git: from $BEFORE to $LOWER"
+
+git mv "$BEFORE" "$TMPFILE"
+git mv "$TMPFILE" "$LOWER"
+
+

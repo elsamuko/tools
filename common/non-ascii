@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat "${1}" | awk '{printf("L%d : %s \n", NR, $0)}' | perl -ne 'print if /[^[:ascii:]]/'
