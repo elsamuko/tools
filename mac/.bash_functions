@@ -1,4 +1,5 @@
 
+# cd to active Finder location
 function cdf {
     SCRIPT="tell application \"Finder\"
                 if ( 1 <= (count Finder windows)) then

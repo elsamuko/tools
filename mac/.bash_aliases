@@ -1,5 +1,12 @@
-alias updatedb='sudo /usr/libexec/locate.updatedb'
+
+# macports
 alias port-update='sudo port selfupdate && sudo port -u upgrade outdated'
-alias mini-server='python3.2 -m http.server'
-alias channels='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -s'
+
+# clipboard
+alias getclip='pbpaste'
+alias putclip='pbcopy'
 alias pwd2clip='pwd | tr -d "\n" | pbcopy'
+
+# system
+alias channels='/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Resources/airport -s'
+alias updatedb='sudo /usr/libexec/locate.updatedb'
