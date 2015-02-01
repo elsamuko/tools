@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 MANIFEST=/tmp/extracted.manifest.xml
 
