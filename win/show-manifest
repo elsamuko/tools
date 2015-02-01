@@ -1,0 +1,9 @@
+#!/bin/bash
+
+MANIFEST=/tmp/extracted.manifest.xml
+
+mt -inputresource:"$(cygpath -w $1)" -out:"$(cygpath -w $MANIFEST)" > /dev/null
+
+tidy --indent-spaces 4 -m -i -xml -w 0 "$MANIFEST" 2>&1 > /dev/null
+
+cygstart "$MANIFEST"
