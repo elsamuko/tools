@@ -2,8 +2,8 @@
 
 DUMPFILE="/tmp/exiftool_dump.html"
 
-if [ $# -lt 1 ]; then
-  echo "Usage: $0 <image>"
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $(basename "$0") <image>"
   exit 1
 fi
 

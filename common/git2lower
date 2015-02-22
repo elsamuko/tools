@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-if [ ! $# -eq 1 ]; then
-    echo "Usage: git_to_lower.sh <file>"
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $(basename "$0") <file>"
     exit 1
 fi
 
-if [ ! -f $1 ]; then
+if [ ! -f "$1" ]; then
     echo "Could not find $1"
     exit 1
 fi
 
 BEFORE="$1"
 TMPFILE="${BEFORE}.tmp"
-LOWER="$(echo $1 | awk '{print tolower($0)}')"
+LOWER="$(echo "$1" | awk '{print tolower($0)}')"
 
 echo "git: from $BEFORE to $LOWER"
 
