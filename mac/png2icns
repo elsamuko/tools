@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# convert a 1024x1024 png to a mac app store compatible icns
+
+ICONSET="/tmp/png2icns/Icon.iconset"
+ORIGINAL="$1"
+ICON="${ORIGINAL%.png}.icns"
+SELF="$(basename "$0")"
+
+# checks
+if [ $# -lt 1 ]; then
+    echo "Usage: $SELF icon.png"
+    exit 1
+fi
+
+if ! [[ "$(file "$ORIGINAL")" =~ "PNG image data" ]]; then
+    echo "$ORIGINAL is not a png image"
+    echo "Usage: $SELF icon.png"
+    exit 1
+fi
+
+ WIDTH=$(sips -g pixelWidth  "$ORIGINAL" | tail -n 1 | awk '{print $NF}')
+HEIGHT=$(sips -g pixelHeight "$ORIGINAL" | tail -n 1 | awk '{print $NF}')
+
+if [ $WIDTH -ne 1024 ] || [ $HEIGHT -ne 1024 ]; then
+    echo "Wrong image dimensions, expected 1024 x 1024, but found $WIDTH x $HEIGHT"
+    exit 1
+fi
+
+# clean
+if [ -d "$ICONSET" ]; then
+    rm -R "$ICONSET"
+fi
+mkdir -p "$ICONSET"
+
+# resize original
+for SIZE in 16 32 128 256 512
+do
+    echo "Creating $SIZE x $SIZE"
+    SQUARE=$((SIZE*2))
+    sips -z $SIZE $SIZE     "$ORIGINAL" --out "$ICONSET/icon_${SIZE}x${SIZE}.png" > /dev/null
+    sips -z $SQUARE $SQUARE "$ORIGINAL" --out "$ICONSET/icon_${SIZE}x${SIZE}@2x.png" > /dev/null
+done
+
+# write to icns
+echo "Writing $ICON"
+iconutil -c icns "$ICONSET" -o "$ICON"
