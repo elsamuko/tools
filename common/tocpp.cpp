@@ -21,11 +21,7 @@ std::string fromFile( const std::string& filename ) {
 std::string toValidVarName( const std::string& filename ) {
     std::string varName = filename;
     std::replace_if( varName.begin(), varName.end(), []( char c ) {
-        if( std::isalnum( c ) || c == '_' ) {
-            return false;
-        }
-
-        return true;
+        return !std::isalnum( c );
     }, '_' );
     return varName;
 }
