@@ -31,13 +31,21 @@ std::string convert( const std::string& data ) {
     int i = 0;
     ss << "{";
 
-    for( const char & c : data ) {
-        if( i++ % 40 == 0 ) {
+    for( const unsigned char & c : data ) {
+        if( i % 16 == 0 ) {
             ss << "\n    ";
+            // mark offset
+            ss << "/* " << std::setfill( '0' ) << std::setw( 8 ) << std::hex << i << " */  ";
+        } else if( i % 8 == 0 ) {
+            ss << "  ";
         }
-
-        ss << std::setw( 3 ) << ( int )c << ",";
+        i++;
+        ss << "0x";
+        ss << std::setfill( '0' ) << std::setw( 2 ) << std::hex << ( int )c << ",";
     }
+
+    // mark end
+    ss << "\n    /* " << std::setfill( '0' ) << std::setw( 8 ) << std::hex << i << " */";
 
     ss << "\n}";
     return ss.str();
