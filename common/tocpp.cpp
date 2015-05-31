@@ -63,7 +63,7 @@ int main( int argc, char* argv[] ) {
     std::string data = fromFile( filename );
 
     std::cout << "// " << filename << std::endl;
-    std::cout << "const char " << var << "[] = " << convert( data ) << ";" << std::endl;
+    std::cout << "const unsigned char " << var << "[] = " << convert( data ) << ";" << std::endl;
 
     return 0;
 }
