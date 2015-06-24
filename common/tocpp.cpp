@@ -6,6 +6,7 @@
 #include <string>
 #include <iomanip>
 #include <algorithm>
+#include <cctype>
 
 void usage() {
     std::cout << "Usage" << std::endl;
