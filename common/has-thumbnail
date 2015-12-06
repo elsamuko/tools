@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $(basename "$0") <image>"
+    exit 1
+fi
+
+IMAGE="$1"
+
+exiftool -b -ThumbnailImage "$IMAGE" > /tmp/thumbnail.jpg 2> /dev/null
+
+MIMETYPE=$(file --brief --mime-type /tmp/thumbnail.jpg)
+
+case "$MIMETYPE" in 
+    image*) 
+        echo "YES";;
+    *)
+        echo "NO";;
+esac
