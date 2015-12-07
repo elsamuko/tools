@@ -1,6 +1,6 @@
 
 # cd to clipboard
 function cdc {
-    CLIP="$(xclip -selection c -o)"
+    local CLIP="$(xclip -selection c -o)"
     cd "$CLIP"
 }
