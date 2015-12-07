@@ -1,7 +1,7 @@
 
 # cd to active Finder location
 function cdf {
-    SCRIPT="tell application \"Finder\"
+    local SCRIPT="tell application \"Finder\"
                 if ( 1 <= (count Finder windows)) then
                     get POSIX path of (target of window 1 as alias)
                 else
@@ -9,6 +9,12 @@ function cdf {
                 end if
             end tell"
 
-    CURRENT_FOLDER=$(osascript -e "$SCRIPT")
+    local CURRENT_FOLDER=$(osascript -e "$SCRIPT")
     cd "$CURRENT_FOLDER"
+}
+
+# cd to clipboard
+function cdc {
+    local CLIP="$(pbpaste)"
+    cd "$CLIP"
 }
