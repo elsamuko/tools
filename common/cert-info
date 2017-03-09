@@ -37,7 +37,7 @@ elif [ -f "$1" ]; then
 # or via domain
 elif [ -n "$DOMAIN"  ]; then
     echo "DOMAIN : $DOMAIN"
-    echo -n | openssl s_client -connect "$DOMAIN":443 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -text
+    echo -n | openssl s_client -connect "$DOMAIN":443 -servername "$DOMAIN" 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -text
 
 # or error
 else
