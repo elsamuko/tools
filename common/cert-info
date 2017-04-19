@@ -20,8 +20,8 @@ function get_clipboard {
 # check for GNU grep with regexp
 grep -V | grep GNU > /dev/null || { echo "Error: Could not find GNU grep"; exit 1; }
 
-# http://stackoverflow.com/a/20046959
-DOMAIN=$(echo "$1" | grep -P '^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$')
+# https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9781449327453/ch08s15.html
+DOMAIN=$(echo "$1" | grep -P '^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$')
 
 
 # via clipboard
@@ -37,7 +37,7 @@ elif [ -f "$1" ]; then
 # or via domain
 elif [ -n "$DOMAIN"  ]; then
     echo "DOMAIN : $DOMAIN"
-    echo -n | openssl s_client -connect "$DOMAIN":443 -servername "$DOMAIN" 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -text
+    echo -n | openssl s_client -connect "$DOMAIN":443 -servername "$DOMAIN" -prexit 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -text
 
 # or error
 else
