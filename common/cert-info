@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
 
+case $(uname) in
+    Linux) GREP=grep;;
+    Darwin) GREP=ggrep;;
+    CYGWIN*) GREP=grep;;
+    *) echo "Unknown OS";;
+esac
+
 function get_clipboard {
     case $(uname) in
-        Linux)
-            xclip -selection c -o
-            ;;
-        Darwin)
-            pbpaste
-            ;;
-        CYGWIN*)
-            getclip
-            ;;
-        *)
-            echo "Unknown OS"
-            ;;
+        Linux) xclip -selection c -o;;
+        Darwin) pbpaste;;
+        CYGWIN*) getclip;;
+        *) echo "Unknown OS";;
     esac
 }
 
 # check for GNU grep with regexp
-grep -V | grep GNU > /dev/null || { echo "Error: Could not find GNU grep"; exit 1; }
+"$GREP" -V | grep GNU > /dev/null || { echo "Error: Could not find GNU grep"; exit 1; }
 
-# https://www.safaribooksonline.com/library/view/regular-expressions-cookbook/9781449327453/ch08s15.html
-DOMAIN=$(echo "$1" | grep -P '^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$')
+# simple domain check
+DOMAIN=$(echo "$1" | "$GREP" -P '^(\w+\.)+(\w+)$')
 
 
 # via clipboard
