@@ -15,8 +15,20 @@ void usage() {
 }
 
 std::string fromFile( const std::string& filename ) {
-    std::ifstream file( filename.c_str(), std::ifstream::binary );
-    return std::string( ( std::istreambuf_iterator<char>( file ) ), ( std::istreambuf_iterator<char>() ) );
+    std::ifstream file( filename.c_str(), std::ios::binary | std::ios::in );
+
+    if( !file ) { return {}; }
+
+    file.seekg( 0, std::ios::end );
+    size_t size = ( size_t ) file.tellg();
+    file.seekg( 0, std::ios::beg );
+
+    if( !size ) { return {}; }
+
+    std::string buffer( size, '\0' );
+    file.read( buffer.data(), size );
+
+    return buffer;
 }
 
 std::string toValidVarName( const std::string& filename ) {
@@ -32,7 +44,7 @@ std::string convert( const std::string& data ) {
     int i = 0;
     ss << "{";
 
-    for( const unsigned char & c : data ) {
+    for( const unsigned char& c : data ) {
         if( i % 16 == 0 ) {
             ss << "\n    ";
             // mark offset
@@ -40,6 +52,7 @@ std::string convert( const std::string& data ) {
         } else if( i % 8 == 0 ) {
             ss << "  ";
         }
+
         i++;
         ss << "0x";
         ss << std::setfill( '0' ) << std::setw( 2 ) << std::hex << ( int )c << ",";
