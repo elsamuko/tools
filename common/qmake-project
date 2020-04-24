@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+# script to generate a non-gui qmake project
+
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $(basename "$0") <name>"
+    exit 1
+fi
+
+PROJECT="$1"
+
+mkdir $PROJECT
+cd $PROJECT
+
+mkdir qmake
+mkdir src
+
+### PROJECT
+echo -n "MAIN_DIR = ..
+SRC_DIR  = \$\${MAIN_DIR}/src
+
+SOURCES += \$\${SRC_DIR}/$PROJECT.cpp
+
+include( setup.pri )
+linux: include( linux.pri )
+win32: include( win.pri )
+macx:  include( mac.pri )
+" > "qmake/$PROJECT.pro"
+
+
+### SETUP
+echo -n "# set debug/release info
+CONFIG(debug, debug|release) {
+    COMPILE_MODE=debug
+}
+
+CONFIG(release, debug|release) {
+    COMPILE_MODE=release
+}
+
+CONFIG -= qt
+CONFIG += c++1z
+CONFIG += console
+CONFIG -= app_bundle
+CONFIG += static
+
+unix:!macx: CONFIG += linux
+
+DESTDIR = \$\${MAIN_DIR}/bin/\$\${COMPILE_MODE}
+OBJECTS_DIR = \$\${MAIN_DIR}/tmp/\$\${TARGET}/\$\${COMPILE_MODE}/objects
+MOC_DIR = \$\${MAIN_DIR}/tmp/\$\${TARGET}/\$\${COMPILE_MODE}/moc
+UI_DIR = \$\${MAIN_DIR}/tmp/\$\${TARGET}/\$\${COMPILE_MODE}/uic
+RCC_DIR = \$\${MAIN_DIR}/tmp/\$\${TARGET}/\$\${COMPILE_MODE}/rcc
+
+INCLUDEPATH += \$\${SRC_DIR}
+
+DEFINES += __PRETTY_FUNCTION__=__FUNCTION__
+" > "qmake/setup.pri"
+
+### LINUX
+echo -n "QMAKE_CXXFLAGS_RELEASE += -msse2 -Ofast
+QMAKE_LFLAGS_RELEASE += -flto
+
+LIBS += -lstdc++fs -lpthread -lrt
+" > "qmake/linux.pri"
+
+### MAC
+echo -n "QMAKE_CXXFLAGS += -mmacosx-version-min=10.13 -Wshadow
+QMAKE_CXXFLAGS_RELEASE += -msse2 -Ofast
+QMAKE_LFLAGS_RELEASE += -flto
+
+QMAKE_LFLAGS += -framework Foundation -framework Appkit
+" > "qmake/mac.pri"
+
+### WIN
+echo -n "
+# disable warnings about POSIX API calls
+DEFINES += _CRT_SECURE_NO_WARNINGS
+
+# make compiler happy
+DEFINES += _WIN32_WINNT=_WIN32_WINNT_WIN7
+
+QMAKE_CXXFLAGS += /std:c++17
+
+static {
+    # change MD -> MT
+    # \sa mkspecs/common/msvc-desktop.conf
+    QMAKE_CFLAGS_RELEASE -= -MD
+    QMAKE_CFLAGS_RELEASE += -MT
+    QMAKE_CXXFLAGS_RELEASE -= -MD
+    QMAKE_CXXFLAGS_RELEASE += -MT
+    QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO -= -MD
+    QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO += -MT
+    QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO -= -MD
+    QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO += -MT
+    QMAKE_CFLAGS_DEBUG -= -MDd
+    QMAKE_CFLAGS_DEBUG += -MTd
+    QMAKE_CXXFLAGS_DEBUG -= -MDd
+    QMAKE_CXXFLAGS_DEBUG += -MTd
+}
+
+# performance flags
+# https://docs.microsoft.com/en-us/cpp/build/reference/qpar-auto-parallelizer?view=vs-2019
+CONFIG(release, debug|release) {
+    QMAKE_CXXFLAGS += /Qpar              # Enables the Auto-Parallelizer feature
+    QMAKE_CXXFLAGS += /O2                # sets a combination of optimizations that optimizes code for maximum speed.
+    QMAKE_CXXFLAGS += /Oi                # generates intrinsic functions for appropriate function calls
+    QMAKE_CXXFLAGS += /Ot                # prefer fast code
+    QMAKE_CXXFLAGS += /Oy                # surpress frame pointer
+    QMAKE_CXXFLAGS += /GT                # fibre safe optimisation
+    QMAKE_CXXFLAGS += /GL                # complete optimisation, needs /LTCG
+    QMAKE_CXXFLAGS += /Gw                # causes the compiler to package global data in individual COMDAT sections
+    QMAKE_CXXFLAGS += /fp:fast           # floating-point behavior
+    QMAKE_LFLAGS   += /LTCG              # link time code generation
+    QMAKE_LFLAGS   += /OPT:REF           # delete unused functions
+    QMAKE_LFLAGS   += /OPT:ICF           # COMDAT folding
+}
+" > "qmake/win.pri"
+
+### SOURCE
+echo -n "#include <iostream>
+
+#define LOG( A ) std::cout << A << std::endl;
+
+int main( int argc, char* argv[] ) {
+    LOG( \"Hello from generated $PROJECT\" );
+    return 0;
+}
+" > "src/$PROJECT.cpp"
