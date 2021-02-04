@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-STR="'{$*}'"
-python3 -c "print(f$STR)"
+STR="'{round($*,12)}'"
+python3 -c "from math import *; print(f$STR)"
+
