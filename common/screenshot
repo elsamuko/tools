@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+mkdir -p ~/Pictures/Screenshots
+cd ~/Pictures/Screenshots
+
+DAY=$(date +20%y\-%m\-%d_%H-%M-%S)
+import -window root "${DAY}_screenshot.png"
