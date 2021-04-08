@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+python3 -c "import json; f = open('$1'); json.load(f);"
+
+if [ $? -eq 0 ]; then
+    echo ok
+fi
