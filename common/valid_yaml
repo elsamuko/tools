@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+python3 -c "import yaml; f = open('$1'); yaml.load(f, Loader=yaml.FullLoader);"
+
+if [ $? -eq 0 ]; then
+    echo ok
+fi
