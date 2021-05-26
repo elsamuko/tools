@@ -5,8 +5,3 @@ function cdc {
     cd "$CLIP"
 }
 
-# cd to dolphin
-function cdd {
-    cd "$(~/bin/dolphloc.cpp)"
-}
-
