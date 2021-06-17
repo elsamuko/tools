@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# delete local tags and fetch them from remote
+
+git tag -l | xargs git tag -d
+git fetch --tags
