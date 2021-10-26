@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# script to loop a program until it exits with non-zero
+
+APP="$@"
+
+echo "Looping $APP"
+
+function run_test {
+    $APP > /tmp/loop.log 2>&1
+}
+
+while run_test
+do
+    date +%F\ %T
+done
