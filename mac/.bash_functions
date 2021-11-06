@@ -18,3 +18,7 @@ function cdc {
     local CLIP="$(pbpaste)"
     cd "$CLIP"
 }
+
+function locate {
+    mdfind "kMDItemDisplayName == '$@'wc"
+}
