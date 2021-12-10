@@ -1,7 +1,4 @@
 
-# macports
-alias port-update='sudo port selfupdate && sudo port -u upgrade outdated'
-
 # clipboard
 alias getclip='pbpaste'
 alias putclip='pbcopy'
