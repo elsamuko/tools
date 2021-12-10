@@ -20,7 +20,8 @@ function get_clipboard {
 "$GREP" -V | grep GNU > /dev/null || { echo "Error: Could not find GNU grep"; exit 1; }
 
 # simple domain check
-DOMAIN=$(echo "$1" | "$GREP" -P '^(\w+\.)+(\w+)$')
+# https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch08s15.html
+DOMAIN=$(echo "$1" | "$GREP" -P '^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$')
 
 
 # via clipboard
