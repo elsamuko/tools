@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# convert videos to 720p
+
+for ORIG in "$@"; do
+    if [ ! -f "$ORIG" ]; then
+        echo "Could not find $ORIG"
+        continue
+    fi
+
+    BASE="${ORIG%.*}"
+    NEW="${BASE}_720p.mp4"
+
+    echo "Converting $ORIG to $NEW"
+    HandBrakeCLI -i "$ORIG" \
+                -o "$NEW" \
+                --preset "Fast 720p30"
+done
