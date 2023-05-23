@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# enhanced touch to create executable stubs for common programming languages
+
+if [ "$#" != "1" ]; then
+    echo "Usage: $(basename "$0") <filename>"
+    exit 1
+fi
+
+FILENAME="$1"
+BASENAME="$(basename "$FILENAME")"
+EXTENSION="${BASENAME##*.}"
+
+# if file exists, just make executable
+if [ -f "$FILENAME" ]; then
+    chmod +x "$FILENAME"
+    exit
+fi
+
+case "$EXTENSION" in
+    sh)
+        echo -e '#!/usr/bin/env bash\n\necho "Hello"' > "$FILENAME"
+        ;;
+    cpp)
+        cat << EOF > "$FILENAME"
+#!/usr/bin/env cppsh
+#include <iostream>
+
+int main( int argc, char* argv[] ) {
+    std::cout << "Hello" << std::endl;
+    return 0;
+}
+EOF
+        ;;
+    py)
+        echo -e '#!/usr/bin/env python3\n\nprint("Hello")' > "$FILENAME"
+        ;;
+    *)
+        touch "$FILENAME"
+        ;;
+esac
+
+chmod +x "$FILENAME"
