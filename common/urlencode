@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+# urlencode input
+
+import urllib.parse
+import sys
+
+
+if not sys.stdin.isatty():
+    # if piped read stdin
+    args = sys.stdin.read().rstrip()
+else:
+    # else join args
+    args = " ".join(sys.argv[1:])
+
+encoded = urllib.parse.quote_plus(args)
+
+if not sys.stdout.isatty():
+    # if piped prinmt w/out newline
+    print(encoded, end="")
+else:
+    # else with
+    print(encoded)
