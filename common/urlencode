@@ -12,10 +12,10 @@ else:
     # else join args
     args = " ".join(sys.argv[1:])
 
-encoded = urllib.parse.quote_plus(args)
+encoded = urllib.parse.quote(args)
 
 if not sys.stdout.isatty():
-    # if piped prinmt w/out newline
+    # if piped print w/out newline
     print(encoded, end="")
 else:
     # else with

@@ -1,4 +1,22 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
+# urldecode input
 
-HEX=$(echo "$@" | sed -e 's/%\([0-9A-F][0-9A-F]\)/\\x\1/g')
-echo -e "$HEX"
+import sys
+from urllib.parse import unquote
+
+
+if not sys.stdin.isatty():
+    # if piped read stdin
+    args = sys.stdin.read().rstrip()
+else:
+    # else join args
+    args = " ".join(sys.argv[1:])
+
+decoded = unquote(args)
+
+if not sys.stdout.isatty():
+    # if piped prinmt w/out newline
+    print(decoded, end="")
+else:
+    # else with
+    print(decoded)
