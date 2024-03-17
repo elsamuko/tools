@@ -2,17 +2,30 @@
 # urlencode input
 
 import urllib.parse
+import argparse
 import sys
+
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("args", nargs=argparse.REMAINDER)
+parser.add_argument("-a", "--all", action="store_true", default=False)
+args = parser.parse_args()
 
 
 if not sys.stdin.isatty():
     # if piped read stdin
-    args = sys.stdin.read().rstrip()
+    rest = sys.stdin.read().rstrip()
 else:
     # else join args
-    args = " ".join(sys.argv[1:])
+    rest = " ".join(args.args)
 
-encoded = urllib.parse.quote(args)
+if args.all:
+    encoded = ""
+    for b in rest.encode():
+        encoded += "%%%02x" % b
+else:
+    encoded = urllib.parse.quote(rest)
 
 if not sys.stdout.isatty():
     # if piped print w/out newline
