@@ -15,7 +15,7 @@ else:
 decoded = unquote(args)
 
 if not sys.stdout.isatty():
-    # if piped prinmt w/out newline
+    # if piped print w/out newline
     print(decoded, end="")
 else:
     # else with
