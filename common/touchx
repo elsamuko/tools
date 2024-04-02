@@ -38,7 +38,12 @@ int main( int argc, char* argv[] ) {
 EOF
         ;;
     py)
-        echo -e '#!/usr/bin/env python3\n\nprint("Hello")' > "$FILENAME"
+        cat << EOF > "$FILENAME"
+#!/usr/bin/env python3
+
+if __name__ == "__main__":
+    print("Hello")
+EOF
         ;;
     *)
         touch "$FILENAME"
