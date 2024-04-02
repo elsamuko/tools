@@ -10,10 +10,16 @@ FILENAME="$1"
 BASENAME="$(basename "$FILENAME")"
 EXTENSION="${BASENAME##*.}"
 
-# if file exists, just make executable
-if [ -f "$FILENAME" ]; then
+# if file exists and is not empty, just make executable
+if [ -s "$FILENAME" ]; then
     chmod +x "$FILENAME"
     exit
+fi
+
+# if file exists and is not a regular file, return
+if [ -e "$FILENAME" ] && [ ! -f "$FILENAME" ]; then
+    echo "$FILENAME exists and is not a regular file"
+    exit 1
 fi
 
 case "$EXTENSION" in
