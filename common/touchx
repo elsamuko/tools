@@ -45,6 +45,17 @@ if __name__ == "__main__":
     print("Hello")
 EOF
         ;;
+    dart)
+        cat << EOF > "$FILENAME"
+#!/usr/bin/env dart
+
+int main() {
+  print("Hello");
+  return 0;
+}
+EOF
+        ;;
+
     *)
         touch "$FILENAME"
         ;;
