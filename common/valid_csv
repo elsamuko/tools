@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+python3 -c "import csv; file = open('$1'); reader = csv.reader(file); [1 for row in reader];"
+
+if [ $? -eq 0 ]; then
+    echo ok
+fi
