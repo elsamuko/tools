@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-case $(uname) in
-    Linux) GREP=grep;;
-    Darwin) GREP=ggrep;;
-    CYGWIN*) GREP=grep;;
-    *) echo "Unknown OS";;
-esac
-
 function get_clipboard {
     case $(uname) in
         Linux) xclip -selection c -o;;
@@ -15,14 +8,6 @@ function get_clipboard {
         *) echo "Unknown OS";;
     esac
 }
-
-# check for GNU grep with regexp
-"$GREP" -V | grep GNU > /dev/null || { echo "Error: Could not find GNU grep"; exit 1; }
-
-# simple domain check
-# https://www.oreilly.com/library/view/regular-expressions-cookbook/9781449327453/ch08s15.html
-DOMAIN=$(echo "$1" | "$GREP" -P '^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$')
-
 
 # via clipboard
 if [ "$1" == "clip" ]; then
@@ -35,11 +20,15 @@ elif [ -f "$1" ]; then
     openssl x509 -text -in "$1"
 
 # or via domain
-elif [ -n "$DOMAIN"  ]; then
-    echo "DOMAIN : $DOMAIN"
-    echo -n | openssl s_client -connect "$DOMAIN":443 -servername "$DOMAIN" -prexit 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -text
-
-# or error
 else
-    >&2 echo "ERROR: [$1] is not 'clip', a valid file or a valid domain"
+    if [[ "$1" == *:* ]]; then
+        HOST="${1%%:*}"
+        PORT="${1##*:}"
+    else
+        HOST="$1"
+        PORT=443
+    fi
+
+    echo "DOMAIN : $HOST:$PORT"
+    echo -n | openssl s_client -connect "$HOST:$PORT" -servername "$HOST" -prexit 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | openssl x509 -text
 fi
