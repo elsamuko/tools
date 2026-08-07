@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# switch to default branch
+
+ORIGIN=$(git config --get remote.origin.url)
+DEFAULT_BRANCH=$(git remote show "$ORIGIN" | grep HEAD | awk '{print $NF}')
+
+git switch "$DEFAULT_BRANCH"
